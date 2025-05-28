@@ -1,0 +1,18 @@
+{
+  "name": "zk-mlp",
+  "version": "1.0.0",
+  "main": "main.ts",
+  "author": "Theo Caldas <theocaldas28@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "start": "tsx main.ts",
+    "input": "tsx input.ts"
+  },
+  "dependencies": {
+    "tsx": "^4.19.4",
+    "zokrates-js": "^1.1.9"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.24"
+  }
+}

@@ -1,0 +1,18 @@
+const u32 n = 100;
+
+// Perceptron prediction function
+def predict(field[n] inputs, field[n] weights, field bias) -> field{
+    field mut sum = 0;
+    for u32 i in 0..n {
+        sum = sum + inputs[i] * weights[i];
+    }
+    sum = sum + bias;
+    field output = if sum >= 0 {1} else {0};
+    return output;
+}
+
+// Inputs are public
+// Weights and bias are private
+def main(field[n] inputs, private field[n] weights, private field bias) -> field {
+    return predict(inputs, weights, bias);
+}
