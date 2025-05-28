@@ -41,8 +41,23 @@ const train_step = () => {
     writeToJsonFile(`zk-sources/perceptron/train_step/input.${N}.json`, input);
 };
 
+const train = () => {
+    const N = 10;
+    const BATCH_SIZE = 10;
+    const input = [
+        randomFieldArray(N),    // weights
+        fieldValue(0),          // bias
+        Array.from({length: BATCH_SIZE}, () => randomFieldArray(N)), // inputs
+        Array.from({length: BATCH_SIZE}, () => randomTarget()),      // targets
+        fieldValue(10)          // rate
+    ];
+    writeToJsonFile(`zk-sources/perceptron/train/input.${N}.${BATCH_SIZE}.json`, input);
+};
+
 //predict();
-train_step();
+//train_step();
+train();
+
 
 
 

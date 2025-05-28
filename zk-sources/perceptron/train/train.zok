@@ -1,0 +1,72 @@
+const u32 N = 10; // number of weights
+const u32 BATCH_SIZE = 1000; // number of inputs in training set
+
+const field MAX_VALUE = 1000; // integer precision
+
+// Prediction function
+def predict(field[N] x, field[N] w, field b) -> field{
+    field mut sum = 0;
+    for u32 i in 0..N {
+        sum = sum + x[i] * w[i];
+    }
+    sum = sum + b;
+    field output = if sum >= MAX_VALUE / 2 {MAX_VALUE} else {0};
+    return output;
+}
+
+// Train step function
+def train_step(
+    field[N] x, // inputs
+    field[N] w, // weights
+    field b,    // bias
+    field y,    // target output
+    field r     // learning rate
+    ) -> (
+        field[N],   // updated weights
+        field       // updated bias
+    ){
+
+    field output = predict(x, w, b);
+    field e = y - output; // error
+
+    field[N] mut w_ = [0; N]; // updated weights
+    for u32 i in 0..N {
+        w_[i] = w[i] + r * e * x[i];
+    }
+
+    field b_ = b + r * e; // updated bias
+
+    return (w_, b_);
+}
+
+// Train loop function
+def train(
+    field[N] mut w,         // weights
+    field mut b,            // bias
+    field[BATCH_SIZE][N] x, // inputs
+    field[BATCH_SIZE] y,    // target outputs
+    field r                 // learning rate
+    ) -> (
+        field[N],   // updated weights
+        field       // updated bias
+    ){
+
+    for u32 i in 0..BATCH_SIZE {
+        (field[N], field) updated = train_step(x[i], w, b, y[i], r);
+        w = updated.0;
+        b = updated.1;
+    }
+    return (w, b);
+}
+
+// Weights and bias are private
+// Inputs,targets and learning rate are public
+def main(
+    private field[N] weights, 
+    private field bias, 
+    field[BATCH_SIZE][N] inputs,
+    field[BATCH_SIZE] targets, 
+    field learning_rate
+) -> (field[N], field) {
+    return train(weights, bias, inputs, targets, learning_rate);
+}
