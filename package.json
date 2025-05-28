@@ -5,7 +5,7 @@
   "author": "Theo Caldas <theocaldas28@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "start": "tsx main.ts",
+    "main": "tsx main.ts",
     "input": "tsx input.ts"
   },
   "dependencies": {

@@ -1,0 +1,51 @@
+const u32 N = 100; // number of inputs and weights
+const field MAX_VALUE = 1000; // integer precision
+
+// Perceptron prediction function
+def predict(field[N] x, field[N] w, field b) -> field{
+    field mut sum = 0;
+    for u32 i in 0..N {
+        sum = sum + x[i] * w[i];
+    }
+    sum = sum + b;
+    field output = if sum >= MAX_VALUE / 2 {MAX_VALUE} else {0};
+    return output;
+}
+
+// Train step function
+def train_step(
+    field[N] x, // inputs
+    field[N] w, // weights
+    field b,    // bias
+    field y,    // target output
+    field r     // learning rate
+    ) -> (
+        field[N],   // updated weights
+        field       // updated bias
+    ){
+
+    field output = predict(x, w, b);
+    field e = y - output; // error
+
+    field[N] mut w_ = [0; N]; // updated weights
+    for u32 i in 0..N {
+        w_[i] = w[i] + r * e * x[i];
+    }
+
+    field b_ = b + r * e; // updated bias
+
+    return (w_, b_);
+}
+
+// Inputs are public
+// Weights and bias are private
+// Target and learning rate are public
+def main(
+    field[N] inputs, 
+    private field[N] weights, 
+    private field bias, 
+    field target, 
+    field learning_rate
+) -> (field[N], field) {
+    return train_step(inputs, weights, bias, target, learning_rate);
+}
