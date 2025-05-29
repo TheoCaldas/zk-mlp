@@ -1,0 +1,75 @@
+import "hashes/sha256/512bitPacked" as sha256packed;
+
+const u32 N = 32; // number of inputs and weights
+const u32 N4 = 8; // N / 4
+const field MAX_VALUE = 1000; // integer precision
+
+// Perceptron prediction function
+def predict(field[N] x, field[N] w, field b) -> field{
+    field mut sum = 0;
+    for u32 i in 0..N {
+        sum = sum + x[i] * w[i];
+    }
+    sum = sum + b;
+    field output = if sum >= MAX_VALUE / 2 {MAX_VALUE} else {0};
+    return output;
+}
+
+// Train step function
+def train_step(
+    field[N] x, // inputs
+    field[N] w, // weights
+    field b,    // bias
+    field y,    // target output
+    field r     // learning rate
+    ) -> (
+        field[N],   // updated weights
+        field       // updated bias
+    ){
+
+    field output = predict(x, w, b);
+    field e = y - output; // error
+
+    field[N] mut w_ = [0; N]; // updated weights
+    for u32 i in 0..N {
+        w_[i] = w[i] + r * e * x[i];
+    }
+
+    field b_ = b + r * e; // updated bias
+
+    return (w_, b_);
+}
+
+// def compare_hash(field[N] inputs, field[2] hash) -> bool{
+//     field[2] h = sha256packed([inputs[0], inputs[1], inputs[2], inputs[3]]);
+//     assert (hash[0] == h[0]);
+//     assert (hash[1] == h[1]);
+//     return true;
+// }
+
+def compare_hash(field[N] inputs, field[N4][2] hash) -> bool{
+    for u32 i in 0..N4 {
+        u32 step = i * 4;
+        field[2] h = sha256packed([inputs[step], inputs[step + 1], inputs[step + 2], inputs[step + 3]]);
+        assert (hash[i][0] == h[0]);
+        assert (hash[i][1] == h[1]);
+    }
+    return true;
+}
+
+// def main(private field[N] inputs, field[2] hash) {
+//     return compare_hash(inputs, hash);
+// }
+
+// Inputs are private
+def main(
+    private field[N] inputs, 
+    field[N4][2] hash, // -> hash of the inputs concat
+    field[N] weights, 
+    field bias, 
+    field target, 
+    field learning_rate
+) -> (field[N], field) {
+    bool equal = compare_hash(inputs, hash);
+    return train_step(inputs, weights, bias, target, learning_rate);
+}
