@@ -2,11 +2,15 @@ import fs from "fs";
 import util from "util";
 import path from "path";
 
+const PATH_PREFIX = "zokrates";
+
 export const configLog = () => {
-    if (!fs.existsSync('logs')) {
-        fs.mkdirSync('logs', { recursive: true });
+    const logPath = path.resolve(PATH_PREFIX, 'logs');
+    if (!fs.existsSync(logPath)) {
+        fs.mkdirSync(logPath, { recursive: true });
     }
-    const logStream = fs.createWriteStream('logs/log - ' + new Date(Date.now()).toISOString(), { flags: 'a' }); 
+    const filePath = path.resolve(logPath, 'log - ' + new Date(Date.now()).toISOString());
+    const logStream = fs.createWriteStream(filePath, { flags: 'a' }); 
     const originalConsoleLog = console.log;
     console.log = (...args: any[]) => {
         originalConsoleLog(...args);           
@@ -20,19 +24,19 @@ export const configLog = () => {
 };
 
 export const readSourceFile = (pathToFile: string): string => {
-  return fs.readFileSync(path.resolve(pathToFile), "utf-8");
+  return fs.readFileSync(path.resolve(PATH_PREFIX, pathToFile), "utf-8");
 };
 
 export const readInputFile = (filePath: string): any => {
   try {
-    const jsonContent = fs.readFileSync(path.resolve(filePath), "utf-8");
+    const jsonContent = fs.readFileSync(path.resolve(PATH_PREFIX, filePath), "utf-8");
     return JSON.parse(jsonContent);
   } catch (error) {
-    console.error(`[ERROR] Error reading or parsing ${filePath}:`, error);
+    console.error(`[ERROR] Error reading or parsing ${PATH_PREFIX}/${filePath}:`, error);
     process.exit(1);
   }
 };
 
 export const writeToJsonFile = (filePath: string, data: any) => {
-    fs.writeFileSync(path.resolve(filePath), JSON.stringify(data, null, 2), 'utf-8');
+    fs.writeFileSync(path.resolve(PATH_PREFIX, filePath), JSON.stringify(data, null, 2), 'utf-8');
 };

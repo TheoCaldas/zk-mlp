@@ -5,8 +5,8 @@
   "author": "Theo Caldas <theocaldas28@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "main": "tsx main.ts",
-    "input": "tsx input.ts"
+    "zok-main": "tsx zokrates/main.ts",
+    "zok-input": "tsx zokrates/input.ts"
   },
   "dependencies": {
     "tsx": "^4.19.4",

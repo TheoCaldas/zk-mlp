@@ -1,4 +1,4 @@
-const u32 N = 100; // number of inputs and weights
+const u32 N = 1000; // number of inputs and weights
 const field MAX_VALUE = 1000; // integer precision
 
 // Perceptron prediction function

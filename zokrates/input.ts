@@ -31,7 +31,7 @@ const predict = () => {
 };
 
 const train_step = () => {
-    const N = 100;
+    const N = 1000;
     const input = [
         randomFieldArray(N),    // inputs
         randomFieldArray(N),    // weights
@@ -149,9 +149,9 @@ const train_step_hash = () => {
 };
 
 //predict();
-//train_step();
+train_step();
 // train();
-train_step_hash();
+// train_step_hash();
 
 
 
