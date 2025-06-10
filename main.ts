@@ -3,8 +3,8 @@ import { configLog, readInputFile, readSourceFile } from "./config";
 
 configLog();
 
-const zokFilePath = "zk-sources/perceptron/train_step_hash/train_step_hash.zok";
-const inputFilePath = "zk-sources/perceptron/train_step_hash/input.32.json";
+const zokFilePath = "zk-sources/mlp/mlp.1.zok";
+const inputFilePath = "zk-sources/mlp/input.1.780.256.json";
 
 const main = async () => {
   try{

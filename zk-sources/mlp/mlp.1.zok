@@ -1,0 +1,40 @@
+const u32 N = 780; // FIRST LAYER SIZE (INPUT) -> 780
+const u32 M = 256; // SECOND LAYER SIZE (HIDDEN) -> 256
+const field MAX_VALUE = 1000; // integer precision
+
+def activation(field x) -> field {
+    return if x >= MAX_VALUE / 2 {MAX_VALUE} else {0};
+}
+
+def get_output(field[N] x, field[N] w, field b) -> field{
+    field mut sum = 0;
+    for u32 i in 0..N {
+        sum = sum + x[i] * w[i];
+    }
+    sum = sum + b;
+    field output = activation(sum);
+    return output;
+}
+
+def forward(
+    field[N] inputs, 
+    field[M][N] weights, 
+    field[M] bias
+    ) -> field[M] {
+
+    field[M] mut output = [0; M];
+    for u32 i in 0..M {
+        output[i] = get_output(inputs, weights[i], bias[i]);
+    }
+
+    return output;
+}
+
+def main(
+    field input_hash,
+    private field[N] inputs, 
+    private field[M][N] weights, 
+    private field[M] bias
+) -> field[M] {
+    return forward(inputs, weights, bias);
+}

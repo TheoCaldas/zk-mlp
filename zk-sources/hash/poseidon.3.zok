@@ -1,0 +1,32 @@
+import "hashes/poseidon/poseidon" as poseidon;
+
+const u32 N = 780; // must be multiple of 5
+
+def chunked_poseidon(field[N] input) -> field{
+    u32 n5 = N / 5;
+    u32 mut i5 = 0;
+    field mut hash = 0;
+
+    for u32 i in 0..n5 {
+        i5 = i * 5;
+
+        field[6] chunk = [
+            hash,
+            input[i5],
+            input[i5 + 1],
+            input[i5 + 2],
+            input[i5 + 3],
+            input[i5 + 4]
+        ];
+
+        hash = poseidon(chunk);
+    }
+
+    return hash;
+}
+
+def main(private field[N] input, field input_hash) -> field {
+    field hash = chunked_poseidon(input);
+    assert (hash == input_hash);
+    return hash;
+}

@@ -1,4 +1,4 @@
-const u32 n = 100;
+const u32 n = 780;
 
 // Perceptron prediction function
 def predict(field[n] inputs, field[n] weights, field bias) -> field{

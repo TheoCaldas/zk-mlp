@@ -9,6 +9,7 @@
     "input": "tsx input.ts"
   },
   "dependencies": {
+    "poseidon-lite": "^0.3.0",
     "tsx": "^4.19.4",
     "zokrates-js": "^1.1.9"
   },

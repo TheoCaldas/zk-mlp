@@ -1,0 +1,17 @@
+import "hashes/poseidon/poseidon" as poseidon;
+
+const u32 N = 784;
+
+def chained_poseidon(field[N] input) -> field {
+    field mut hash = input[0];
+    for u32 i in 1..N {
+        hash = poseidon([hash, input[i]]);
+    }
+    return hash;
+}
+
+def main(private field[N] input, field input_hash) -> field {
+    field hash = chained_poseidon(input);
+    assert (hash == input_hash);
+    return hash;
+}

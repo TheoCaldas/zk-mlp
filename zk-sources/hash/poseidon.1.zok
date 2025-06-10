@@ -1,0 +1,9 @@
+import "hashes/poseidon/poseidon" as poseidon;
+
+const u32 N = 6;
+
+def main(private field[N] input, field input_hash) -> field {
+    field hash = poseidon(input);
+    assert (hash == input_hash);
+    return hash;
+}
