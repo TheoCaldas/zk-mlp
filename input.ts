@@ -23,7 +23,7 @@ const randomTarget = () => {
 }
 
 const predict = () => {
-    const N = 780;
+    const N = 10000;
     const input = [
         randomFieldArray(N),    // inputs
         randomFieldArray(N),    // weights
@@ -174,14 +174,58 @@ const mlp_1 = () => {
     writeToJsonFile(`zk-sources/mlp/input.1.${N}.${M}.json`, input);
 };
 
-// predict();
+const relu_1 = () => {
+    const N = 1000;
+    const inputs = randomFieldArray(N);
+
+    const input = [
+        inputs,    // inputs
+    ];
+    writeToJsonFile(`zk-sources/activation/input.relu.${N}.json`, input);
+};
+
+const train_step_poseidon = () => {
+    const N = 780;
+    const inputs = randomFieldArray(N);
+    const inputs_int = inputs.map(e => BigInt(e));
+    const n5 = N / 5;
+
+    let hash = BigInt(0);
+    let i5: number;
+    for(let i = 0; i < n5; i++){
+        i5 = i * 5;
+        const chunk = [
+            hash,
+            inputs_int[i5],
+            inputs_int[i5 + 1],
+            inputs_int[i5 + 2],
+            inputs_int[i5 + 3],
+            inputs_int[i5 + 4],
+        ];
+        hash = poseidon6(chunk);
+    }
+
+    const input = [
+        to128BitHexaString(hash),//hash          
+        inputs,                 // inputs
+        randomFieldArray(N),    // weights
+        fieldValue(0),          // bias
+        randomTarget(),         // target
+        randomFieldValue(100)   // rate
+    ];
+    writeToJsonFile(`zk-sources/perceptron/train_step_poseidon/input.${N}.json`, input);
+};
+
+predict();
 //train_step();
 // train();
 // train_step_hash();
 // poseidon_1();
 // poseidon_2();
 // poseidon_3();
-mlp_1();
+// mlp_1();
+// relu_1();
+// train_step_poseidon();
 
 
 

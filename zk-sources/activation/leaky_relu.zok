@@ -1,0 +1,13 @@
+const u32 N = 1000;
+
+def relu(field x) -> field{
+    return if x >= 0 {x} else {2 * x};
+}
+
+def main(private field[N] input) -> field[N] {
+    field[N] mut output = [0; N];
+    for u32 i in 0..N {
+        output[i] = relu(input[i]);
+    }
+    return output;
+}

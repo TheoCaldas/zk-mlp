@@ -1,0 +1,77 @@
+import "hashes/poseidon/poseidon" as poseidon;
+
+const u32 N = 780; // number of inputs and weights (must be multiple of 5)
+const field MAX_VALUE = 1000; // integer precision
+
+// Perceptron prediction function
+def predict(field[N] x, field[N] w, field b) -> field{
+    field mut sum = 0;
+    for u32 i in 0..N {
+        sum = sum + x[i] * w[i];
+    }
+    sum = sum + b;
+    field output = if sum >= MAX_VALUE / 2 {MAX_VALUE} else {0};
+    return output;
+}
+
+// Train step function
+def train_step(
+    field[N] x, // inputs
+    field[N] w, // weights
+    field b,    // bias
+    field y,    // target output
+    field r     // learning rate
+    ) -> (
+        field[N],   // updated weights
+        field       // updated bias
+    ){
+
+    field output = predict(x, w, b);
+    field e = y - output; // error
+
+    field[N] mut w_ = [0; N]; // updated weights
+    for u32 i in 0..N {
+        w_[i] = w[i] + r * e * x[i];
+    }
+
+    field b_ = b + r * e; // updated bias
+
+    return (w_, b_);
+}
+
+def chunked_poseidon(field[N] input) -> field{
+    u32 n5 = N / 5;
+    u32 mut i5 = 0;
+    field mut hash = 0;
+
+    for u32 i in 0..n5 {
+        i5 = i * 5;
+
+        field[6] chunk = [
+            hash,
+            input[i5],
+            input[i5 + 1],
+            input[i5 + 2],
+            input[i5 + 3],
+            input[i5 + 4]
+        ];
+
+        hash = poseidon(chunk);
+    }
+
+    return hash;
+}
+
+// Inputs are private
+def main(
+    field input_hash,
+    private field[N] input, 
+    field[N] weights, 
+    field bias, 
+    field target, 
+    field learning_rate
+) -> (field[N], field) {
+    field hash = chunked_poseidon(input);
+    assert (hash == input_hash);
+    return train_step(input, weights, bias, target, learning_rate);
+}
