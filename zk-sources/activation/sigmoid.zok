@@ -1,0 +1,21 @@
+const u32 N = 1000;
+const field MAX_VALUE = 1000;
+
+def approx_exp(field x) -> field {
+    field HALF_VALUE = MAX_VALUE / 2;
+    return if x > HALF_VALUE {MAX_VALUE} else {HALF_VALUE + x};
+}
+
+def sigmoid(field x) -> field {
+    field HALF_VALUE = MAX_VALUE / 2;
+    field denom = MAX_VALUE + approx_exp(x);
+    return (HALF_VALUE * HALF_VALUE) / denom;
+}
+
+def main(private field[N] input) -> field[N] {
+    field[N] mut output = [0; N];
+    for u32 i in 0..N {
+        output[i] = sigmoid(input[i]);
+    }
+    return output;
+}

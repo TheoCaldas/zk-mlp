@@ -5,8 +5,8 @@ configLog();
 
 // const zokFilePath = "zk-sources/perceptron/train_step_poseidon/train_step_poseidon.zok";
 // const inputFilePath = "zk-sources/perceptron/train_step_poseidon/input.780.json";
-const zokFilePath = "zk-sources/perceptron/predict/predict.zok";
-const inputFilePath = "zk-sources/perceptron/predict/input.10000.json";
+const zokFilePath = "zk-sources/activation/sigmoid.zok";
+const inputFilePath = "zk-sources/activation/input.relu.1000.json";
 
 
 const main = async () => {
