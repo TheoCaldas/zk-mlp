@@ -1,0 +1,22 @@
+import "hashes/sha256/512bitPacked" as sha256packed;
+
+const u32 N = 8; // number of inputs
+const u32 N4 = 2; // N / 4
+
+def compare_hash(field[N] inputs, field[N4][2] hash) -> bool{
+    for u32 i in 0..N4 {
+        u32 step = i * 4;
+        field[2] h = sha256packed([inputs[step], inputs[step + 1], inputs[step + 2], inputs[step + 3]]);
+        assert (hash[i][0] == h[0]);
+        assert (hash[i][1] == h[1]);
+    }
+    return true;
+}
+
+def main(
+    private field[N] inputs, 
+    field[N4][2] hash
+) -> (field[N], field) {
+    bool equal = compare_hash(inputs, hash);
+    return equal;
+}
